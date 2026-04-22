@@ -25,6 +25,8 @@ module.exports = async (env, options) => {
         dependOn: "react",
       },
       commands: "./src/commands/commands.ts",
+      dialog: "./src/taskpane/dialog.tsx",
+      launchevent: "./src/launchevent/launchevent.js",
     },
     output: {
       clean: true,
@@ -61,6 +63,14 @@ module.exports = async (env, options) => {
       ],
     },
     plugins: [
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: "./src/launchevent/launchevent.js",
+            to: "launchevent.js",
+          },
+        ],
+      }),
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
@@ -90,6 +100,11 @@ module.exports = async (env, options) => {
         template: "./src/commands/commands.html",
         chunks: ["polyfill", "commands"],
       }),
+      new HtmlWebpackPlugin({
+        filename: "dialog.html",
+        template: "./src/taskpane/dialog.html",
+        chunks: ["dialog", "vendor", "polyfill"],
+      }),
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],
       }),
@@ -101,7 +116,10 @@ module.exports = async (env, options) => {
       },
       server: {
         type: "https",
-        options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
+        options:
+          env.WEBPACK_BUILD || options.https !== undefined
+            ? options.https
+            : await getHttpsOptions(),
       },
       port: process.env.npm_package_config_dev_server_port || 3000,
     },
