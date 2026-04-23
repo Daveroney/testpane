@@ -1,6 +1,5 @@
 import { Button } from "@fluentui/react-components";
 import React from "react";
-import "./pokemonCatcher.css";
 import { PokemonApi } from "../../api/PokemonApi";
 
 interface PokemonCatcherProps {
@@ -23,16 +22,13 @@ export function PokemonCatcher({ pokemonApi }: PokemonCatcherProps) {
         async (pokemonResult) => {
           dialog = pokemonResult.value;
           // Will trigger when the child (PokemonDialog) delivers a message to this component.
-          // This is done because the dialog exists in another context.
+          // This has to be done exactly like that because the dialog exists in another context.
           dialog.addEventHandler(
             Office.EventType.DialogMessageReceived,
             async (arg: Office.DialogParentMessageReceivedEventArgs) => {
               const message = JSON.parse(arg.message);
-              // We send the available/filtered partners when the dialog is ready to receive data.
               if (message.type === "ready") {
                 await sendRandomPokemon();
-              }
-              if (message.type === "pokemonSelected") {
               }
             }
           );
@@ -44,9 +40,7 @@ export function PokemonCatcher({ pokemonApi }: PokemonCatcherProps) {
     }
   }
 
-  // Handle errors and events around the dialog, like when the dialog is closed
   function processDialogEvent(arg) {
-    // 12006 = Dialog is closed via "X" button
     if (arg.error == 12006) {
       setLoadingMessage("");
     }
