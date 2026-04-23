@@ -41,7 +41,7 @@ const App: React.FC<AppProps> = (props: AppProps) => {
   return (
     <div className={styles.root}>
       <Header logo="assets/logo-filled.png" title={props.title} message="Welcome" />
-      <HeroList message="Discover what this add-in can do for you today!" items={listItems} />
+      <HeroList message="Discover which Pokémon you can catch!" items={listItems} />
       <PokemonCatcher pokemonApi={pokemonApi} />
     </div>
   );
